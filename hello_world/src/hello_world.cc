@@ -1,3 +1,5 @@
+// Author: Bruno Knopki Nery
+
 #include <iostream> 
 
 int main(){
