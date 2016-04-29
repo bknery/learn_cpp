@@ -29,3 +29,6 @@
 
 # build directory
 build/
+
+# VIM swap files
+*.swp
