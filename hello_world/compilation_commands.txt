@@ -1,6 +1,0 @@
-#CPP
-gcc hello_world.cc -o hello_world -lstdc++
-
-#C
-gcc hello_world_c.c -o hello_world_c
-
