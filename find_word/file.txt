@@ -1,0 +1,8 @@
+file.txt
+line 1
+line 2
+line 3
+line 4
+line 5
+word 1 word 2 word 3 word 4
+end of file
