@@ -1,5 +1,3 @@
-// Hello World program
-// file: hello_world.cpp
 #include <iostream>
 
 void f(int* p);
