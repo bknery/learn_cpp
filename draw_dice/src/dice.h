@@ -4,7 +4,7 @@
 #ifndef DICE_H
 #define DICE_H
 
-struct Dice {
+class Dice {
 private:
 	int sideUp;
 public:
