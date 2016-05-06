@@ -5,7 +5,9 @@
 #define DICE_H
 
 struct Dice {
+private:
 	int sideUp;
+public:
 	int init(int side);
 	void draw(void);
 	int getSideUp(void);
