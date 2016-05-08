@@ -11,6 +11,7 @@ public:
 	int initialize(int side);
 	void draw(void);
 	int getSideUp(void);
+	void cleanup(void);
 };
 
 #endif // DICE_H
