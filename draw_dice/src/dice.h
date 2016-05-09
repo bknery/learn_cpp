@@ -8,7 +8,8 @@ class Dice {
 private:
 	int sideUp;
 public:
-	int init(int side);
+	Dice(int initSide);
+	~Dice();
 	void draw(void);
 	int getSideUp(void);
 };
