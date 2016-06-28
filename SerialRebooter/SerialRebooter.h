@@ -1,17 +1,31 @@
-// Dice interface
-// file: dice.h
+// Serial Rebooter header
+// file: SerialRebooter.h
 // Author: Bruno Knopki Nery
-#ifndef DICE_H
-#define DICE_H
+#ifndef SERIAL_REBOOTER_H
+#define SERIAL_REBOOTER_H
 
-class Dice {
-private:
-	int sideUp;
+//  Config options
+
+namespace SerialRebooter {
+
+class SerialRebooter {
 public:
-	Dice(int initSide);
-	~Dice();
-	void draw(void);
-	int getSideUp(void);
+	SerialRebooter(std::string init_serial_device,
+					int initTotalReboots,
+					int init_wait,
+					std::string init_reboot_cmd,
+					std::string init_prompt);
+	~SerialRebooter();
+	int Start(void);
+	int GetResult(void);
+private:
+	std::string serial_device_;
+	int total_reboots_;
+	int wait_;
+	std::string reboot_cmd_;
+	std::string prompt_;
+	int result_;
 };
 
-#endif // DICE_H
+} // namespace SerialRebooter
+#endif // SERIAL_REBOOTER_H
