@@ -12,16 +12,17 @@ public:
 					int initTotalReboots,
 					int init_wait,
 					std::string init_reboot_cmd,
-					std::string init_prompt);
+					std::string init_find_pattern);
 	~SerialRebooter();
 	int Start(void);
 	int GetResult(void);
+	void print_config(void);
 private:
 	std::string serial_device_;
 	int total_reboots_;
 	int wait_;
 	std::string reboot_cmd_;
-	std::string prompt_;
+	std::string find_pattern_;
 	int result_;
 };
 
