@@ -1,19 +1,17 @@
-OBJS = draw_dice.o dice.o
+OBJS = SerialRebooterCmd.o SerialRebooter.o
 CPP = g++
 DEBUG = -g
-CFLAGS = -Wall -c $(DEBUG)
+CFLAGS = -Wall -c $(DEBUG) -std=c++11
 LFLAGS = -Wall $(DEBUG)
 
-SRC_PATH = ./src
+SerialRebooterCmd: $(OBJS)
+	$(CPP) $(LFLAGS) $(OBJS) -o SerialRebooterCmd
 
-draw_dice: $(OBJS)
-	$(CPP) $(LFLAGS) $(OBJS) -o draw_dice
+SerialRebooterCmd.o: SerialRebooterCmd.cpp SerialRebooterCmd.h
+	$(CPP) $(CFLAGS) SerialRebooterCmd.cpp
 
-draw_dice.o: $(SRC_PATH)/draw_dice.cpp $(SRC_PATH)/dice.h
-	$(CPP) $(CFLAGS) $(SRC_PATH)/draw_dice.cpp
-
-dice.o: $(SRC_PATH)/dice.cpp $(SRC_PATH)/dice.h
-	$(CPP) $(CFLAGS) $(SRC_PATH)/dice.cpp
+SerialRebooter.o: SerialRebooter.cpp SerialRebooter.h
+	$(CPP) $(CFLAGS) SerialRebooter.cpp
 
 clean:
-	rm *.o draw_dice
+	rm *.o SerialRebooterCmd

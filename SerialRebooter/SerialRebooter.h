@@ -4,9 +4,7 @@
 #ifndef SERIAL_REBOOTER_H
 #define SERIAL_REBOOTER_H
 
-//  Config options
-
-namespace SerialRebooter {
+#include <string>
 
 class SerialRebooter {
 public:
@@ -27,5 +25,4 @@ private:
 	int result_;
 };
 
-} // namespace SerialRebooter
 #endif // SERIAL_REBOOTER_H
