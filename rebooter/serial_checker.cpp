@@ -7,12 +7,13 @@
 #include <string>
 #include <cstdlib>
 
-SerialChecker::SerialChecker (std::string init_serial_device,
-								bool init_log_serial,
-								std::string init_find_pattern) {
-	serial_device_ = init_serial_device;
-	find_pattern_ = init_find_pattern;
-	log_serial_ = init_log_serial;
+SerialChecker::SerialChecker (std::string serial_device,
+								bool log_serial,
+								std::string find_pattern)
+	: serial_device_(serial_device),
+	log_serial_(log_serial),
+	find_pattern_(find_pattern) {
+
 	result_ = 0;
 
 	std::cout << "Opening Serial checker..." << std::endl;
@@ -24,7 +25,6 @@ SerialChecker::~SerialChecker() {
 
 int SerialChecker::Config(void) {
 
-	char key;
 	const std::string stty_cmd ("stty");
 	const std::string stty_options (" ispeed 115200 ospeed 115200 clocal cread -crtscts cs8 ignpar -cstopb -echo -ixon");
 	std::string stty_full_cmd;
@@ -78,4 +78,5 @@ int SerialChecker::InitCheckPattern(void) {
 		}
 	}
 	serial_rd.close();
+	return 0;
 }

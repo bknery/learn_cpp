@@ -8,13 +8,13 @@
 
 class Uriel {
 public:
-	Uriel(std::string init_uriel_device);
-	~Uriel();
-	int On(void);
-	int Off(void);
+	Uriel(std::string uriel_device);
+	int On(int port);
+	int Off(int port);
 private:
 	std::string uriel_device_;
-	std::ofstream serial_wr;
+	const char uriel_on_cmd_[5] = {'#', 0x01, 0x06, 0x01, '*'};
+	const char uriel_off_cmd_[5] = {'#', 0x01, 0x06, 0x00, '*'};
 };
 
 #endif // URIEL_H

@@ -1,40 +1,56 @@
-// Serial Command Sender class
-// file: serial_cmd_sender.cpp
+// URI-EL class
+// file: uriel.cpp
 // Author: Bruno Knopki Nery
-#include "serial_cmd_sender.h"
+#include "uriel.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstdlib>
 
-Uriel::Uriel(std::string init_serial_device,
-								std::string init_reboot_cmd) {
-	serial_device_ = init_serial_device;
-	reboot_cmd_ = init_reboot_cmd;
+Uriel::Uriel(std::string uriel_device) : uriel_device_(uriel_device) {} 
 
-	// open serial port for writing
-	std::cout << "Opening Serial Device for writing...";
-	std::ofstream serial_wr (serial_device_);
-}
+int Uriel::On(int port) {
 
-Uriel::~Uriel() {
-	std::cout << "Closing serial..." << std::endl;
-	// close serial for writing
-	serial_wr.close();
-}
+	// open URIEL port for writing
+	std::cout << "Opening URIEL Device...";
+	std::ofstream uriel_hl (uriel_device_);
 
-
-int Uriel::Send(std::string cmd) {
-
-	// check if serial was correctly open
-	if (serial_wr.is_open() == false) {
-		std::cout << std::endl << "ERROR: serial port not open for writing." << std::endl;
+	// check if uriel was correctly open
+	if (uriel_hl.is_open()) {
+		std::cout << "OK" << std::endl;
+	} else {
+		std::cout << std::endl << "ERROR opening URIEL device." << std::endl;
 		return -1;
 	}
-	// send command
-	serial_wr.write(cmd.c_str(), cmd.length());
-	serial_wr.write("\n", 1);
-	std::cout << "SERIAL CMD: " << cmd << std::endl;
+	// turn URIEL on
+	for (unsigned int i = 0; i < sizeof(uriel_on_cmd_); i++) {
+		uriel_hl.put(uriel_on_cmd_[i]);
+	}
 
+	// close URIEL device
+	uriel_hl.close();
+	return 0;
+}
+
+int Uriel::Off(int port) {
+
+	// open URIEL port for writing
+	std::cout << "Opening URIEL Device...";
+	std::ofstream uriel_hl (uriel_device_);
+
+	// check if uriel was correctly open
+	if (uriel_hl.is_open()) {
+		std::cout << "OK" << std::endl;
+	} else {
+		std::cout << std::endl << "ERROR opening URIEL device." << std::endl;
+		return -1;
+	}
+	// turn URIEL off
+	for (unsigned int i = 0; i < sizeof(uriel_off_cmd_); i++) {
+		uriel_hl.put(uriel_off_cmd_[i]);
+	}
+
+	// close URIEL device
+	uriel_hl.close();
 	return 0;
 }

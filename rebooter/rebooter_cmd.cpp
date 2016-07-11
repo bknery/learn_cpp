@@ -57,8 +57,8 @@ int main(int argc, char* argv[]){
 }
 
 void print_help(void){
-	std::cout << "Usage: rebooter_cmd <serial_device> <num_reboots> <wait_time_s> cmd <reboot_cmd> <find_pattern>" << std::endl;
-	std::cout << "Usage: rebooter_cmd <serial_device> <num_reboots> <wait_time_s> uri <uri_device> <uri_port> <uri_off_time_ms> <find_pattern>" << std::endl;
-	std::cout << "Example: rebooter_cmd /dev/ttyS0 100 4 cmd reboot u-boot$" << std::endl;
-	std::cout << "Example: rebooter_cmd /dev/ttyS0 100 4 uri /dev/ttyACM0 6 1000 u-boot$" << std::endl;
+	std::cout << "Usage: auto_rebooter <serial_device> <num_reboots> <wait_time_s> cmd <reboot_cmd> <find_pattern>" << std::endl;
+	std::cout << "Usage: auto_rebooter <serial_device> <num_reboots> <wait_time_s> uri <uri_device> <uri_port> <uri_off_time_ms> <find_pattern>" << std::endl;
+	std::cout << "Example: auto_rebooter /dev/ttyS0 100 4 cmd reboot u-boot$" << std::endl;
+	std::cout << "Example: auto_rebooter /dev/ttyS0 100 4 uri /dev/ttyACM0 6 1000 u-boot$" << std::endl;
 }

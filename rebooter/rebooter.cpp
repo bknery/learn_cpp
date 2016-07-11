@@ -2,6 +2,9 @@
 // file: rebooter.cpp
 // Author: Bruno Knopki Nery
 #include "rebooter.h"
+#include "serial_checker.h"
+#include "serial_cmd_sender.h"
+#include "uriel.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,43 +12,44 @@
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 
-Rebooter::Rebooter(std::string init_serial_device,
-								int init_total_reboots,
-								int init_wait,
-								std::string init_reboot_cmd,
-								std::string init_find_pattern) {
-	serial_device_ = init_serial_device;
-	total_reboots_ = init_total_reboots;
-	wait_ = init_wait;
+Rebooter::Rebooter(std::string serial_device,
+					int total_reboots,
+					int wait,
+					std::string reboot_cmd,
+					std::string find_pattern) 
+	: serial_device_(serial_device),
+	total_reboots_(total_reboots),
+	wait_(wait),
+	reboot_cmd_(reboot_cmd),
+	find_pattern_(find_pattern) {
+
 	reboot_device_ = SERIAL_CMD;
-	reboot_cmd_ = init_reboot_cmd;
-	find_pattern_ = init_find_pattern;
-	uri_device_ = "/dev/ttyACM0"; // dummy device
-	uri_port_ = 6;
+	uriel_device_ = "/dev/ttyACM0"; // dummy device
+	uriel_port_ = 6;
 	off_time_ms_ = 1000;
 	result_ = 0;
 
 	std::cout << "Serial rebooter with commands through serial port..." << std::endl;
 }
 
-Rebooter::Rebooter(std::string init_serial_device,
-								int init_total_reboots,
-								int init_wait,
-								std::string init_uri_device,
-								int init_uri_port,
-								int init_off_time_ms,
-								std::string init_find_pattern) {
-	serial_device_ = init_serial_device;
-	total_reboots_ = init_total_reboots;
-	wait_ = init_wait;
+Rebooter::Rebooter(std::string serial_device,
+								int total_reboots,
+								int wait,
+								std::string uriel_device,
+								int uriel_port,
+								int off_time_ms,
+								std::string find_pattern)
+	: serial_device_(serial_device),
+	total_reboots_(total_reboots),
+	wait_(wait),
+	uriel_device_(uriel_device),
+	uriel_port_(uriel_port),
+	off_time_ms_(off_time_ms),
+	find_pattern_(find_pattern) {
+	
 	reboot_device_ = URI_EL;
 	reboot_cmd_ = "reboot"; // dummy cmd
-	find_pattern_ = init_find_pattern;
-	uri_device_ = init_uri_device;
-	uri_port_ = init_uri_port;
-	off_time_ms_ = init_off_time_ms;
 	result_ = 0;
-
 	std::cout << "Serial rebooter with URI-EL..." << std::endl;
 }
 Rebooter::~Rebooter() {
@@ -54,6 +58,7 @@ Rebooter::~Rebooter() {
 
 int Rebooter::Start(void){
 
+	char key;
 	std::cout << "Configure equipment under test and press 'S' to start the test:" << std::endl;
 	std::cin >> key;
 	std::cout << "Test starting..." << std::endl;
@@ -75,43 +80,12 @@ int Rebooter::Start(void){
 			std::cout << "ERROR rebooting!" << std::endl;
 			return -1;
 		}
-	
 
-		// read serial
-		// open serial port for reading
-		std::cout << "Opening Serial Device for reading...";
-		std::ifstream serial_rd (serial_device_);
-
-		// check if serial was correctly open
-		if (serial_rd.is_open()) {
-			std::cout << "OK" << std::endl;
-		} else {
-			std::cout << std::endl << "ERROR opening serial port for reading." << std::endl;
-			return -1;
-		}
-
-		bool found_pattern = false;
-
-		while (found_pattern == false) {
-			// get line
-			serial_rd.getline(line_buf, sizeof(line_buf));
-
-			// convert to string
-			std::string line_str (line_buf);
-
-			// print line to std output
-			std::cout << "SERIAL IN: " << line_str << std::endl;
-
-			// look for pattern
-			if (line_str.find(find_pattern_) != std::string::npos) {
-				std::cout << "Pattern found." << std::endl;
-				std::cout << "Sleep for " << wait_ << " seconds." << std::endl;
-				std::this_thread::sleep_for (std::chrono::seconds(wait_));
-				found_pattern = true;
-			}
-		}
-		serial_rd.close();
+		// Open serial and check pattern
+		// Stays here until pattern is found
+		serial_checker.InitCheckPattern();
 	}
+
 	std::cout << std::endl;
 	std::cout << "######## SUCCESS! " << total_reboots_ << " reboots executed ########" << std::endl;
 	print_config();
@@ -135,8 +109,8 @@ void Rebooter::print_config(void){
 		std::cout << "Total reboots: " << total_reboots_ << std::endl;
 		std::cout << "Wait: " << wait_ << std::endl;
 		std::cout << "Reboot device: URI-EL" << std::endl;
-		std::cout << "URI-EL device: " << uri_device_ << std::endl;
-		std::cout << "URI-EL port: " << uri_port_ << std::endl;
+		std::cout << "URI-EL device: " << uriel_device_ << std::endl;
+		std::cout << "URI-EL port: " << uriel_port_ << std::endl;
 		std::cout << "OFF time ms: " << off_time_ms_ << std::endl;
 		std::cout << "Pattern to find: " << find_pattern_ << std::endl;
 	}
@@ -148,11 +122,15 @@ int Rebooter::reboot(void) {
 		SerialCmdSender serial_cmd_sender (serial_device_);
 		
 		// send reboot command and close serial 
-		serial_cmd_sender (reboot_cmd_);
+		serial_cmd_sender.Send(reboot_cmd_);
 
 	} else if (reboot_device_ == URI_EL) {
+
+		// Create URI-EL obj
+		Uriel uriel(uriel_device_);
+
 		std::cout << "Turning URI-EL off..." << std::endl;
-		if (turn_uriel_off() < 0) {
+		if (uriel.Off(uriel_port_) < 0) {
 			std::cout << "Error turning URIEL off." << std::endl;
 			return -1;
 		}
@@ -162,57 +140,11 @@ int Rebooter::reboot(void) {
 
 		std::cout << "Turning URI-EL on..." << std::endl;
 		// turn on again
-		if (turn_uriel_on() < 0) {
+		if (uriel.On(uriel_port_) < 0) {
 			std::cout << "Error turning URIEL on." << std::endl;
 			return -1;
 		}
 
 	}
-	return 0;
-}
-
-int Rebooter::turn_uriel_on(void) {
-
-	// open URIEL port for writing
-	std::cout << "Opening URIEL Device...";
-	std::ofstream uriel (uri_device_);
-
-	// check if uriel was correctly open
-	if (uriel.is_open()) {
-		std::cout << "OK" << std::endl;
-	} else {
-		std::cout << std::endl << "ERROR opening URIEL device." << std::endl;
-		return -1;
-	}
-	// turn URIEL on
-	for (unsigned int i = 0; i < sizeof(uri_on_cmd_); i++) {
-		uriel.put(uri_on_cmd_[i]);
-	}
-
-	// close URIEL device
-	uriel.close();
-	return 0;
-}
-
-int Rebooter::turn_uriel_off(void) {
-
-	// open URIEL port for writing
-	std::cout << "Opening URIEL Device...";
-	std::ofstream uriel (uri_device_);
-
-	// check if uriel was correctly open
-	if (uriel.is_open()) {
-		std::cout << "OK" << std::endl;
-	} else {
-		std::cout << std::endl << "ERROR opening URIEL device." << std::endl;
-		return -1;
-	}
-	// turn URIEL off
-	for (unsigned int i = 0; i < sizeof(uri_off_cmd_); i++) {
-		uriel.put(uri_off_cmd_[i]);
-	}
-
-	// close URIEL device
-	uriel.close();
 	return 0;
 }
