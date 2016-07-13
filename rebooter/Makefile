@@ -1,4 +1,4 @@
-OBJS = rebooter_cmd.o rebooter.o serial_checker.o serial_cmd_sender.o uriel.o
+OBJS = rebooter_cmd.o rebooter.o serial_checker.o serial_cmd_sender.o uriel.o parport_controller.o
 CPP = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG) -std=c++11
@@ -22,5 +22,8 @@ serial_cmd_sender.o: serial_cmd_sender.cpp serial_cmd_sender.h
 uriel.o: uriel.cpp uriel.h
 	$(CPP) $(CFLAGS) uriel.cpp
 	
+parport_controller.o: parport_controller.c parport_controller.h
+	$(CPP) $(CFLAGS) parport_controller.c
+
 clean:
 	rm *.o auto_rebooter

@@ -5,6 +5,7 @@
 #include "serial_checker.h"
 #include "serial_cmd_sender.h"
 #include "uriel.h"
+#include "parport_controller.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -48,9 +49,30 @@ Rebooter::Rebooter(std::string serial_device,
 	find_pattern_(find_pattern) {
 	
 	reboot_device_ = URI_EL;
+	parport_device_ = "/dev/parport0"; // dummy device
 	reboot_cmd_ = "reboot"; // dummy cmd
 	result_ = 0;
 	std::cout << "Serial rebooter with URI-EL..." << std::endl;
+}
+Rebooter::Rebooter(std::string serial_device,
+								int total_reboots,
+								int wait,
+								std::string parport_device,
+								int off_time_ms,
+								std::string find_pattern)
+	: serial_device_(serial_device),
+	total_reboots_(total_reboots),
+	wait_(wait),
+	parport_device_(parport_device),
+	off_time_ms_(off_time_ms),
+	find_pattern_(find_pattern) {
+	
+	reboot_device_ = PARPORT;
+	uriel_device_ = "/dev/ttyACM0"; // dummy device
+	uriel_port_ = 6; // dummy port
+	reboot_cmd_ = "reboot"; // dummy cmd
+	result_ = 0;
+	std::cout << "Serial rebooter with PARPORT..." << std::endl;
 }
 Rebooter::~Rebooter() {
 	std::cout << "Closing serial rebooter..." << std::endl;
@@ -113,6 +135,14 @@ void Rebooter::print_config(void){
 		std::cout << "URI-EL port: " << uriel_port_ << std::endl;
 		std::cout << "OFF time ms: " << off_time_ms_ << std::endl;
 		std::cout << "Pattern to find: " << find_pattern_ << std::endl;
+	} else if (reboot_device_ == PARPORT) {
+		std::cout << "Serial sevice: " << serial_device_ << std::endl;
+		std::cout << "Total reboots: " << total_reboots_ << std::endl;
+		std::cout << "Wait: " << wait_ << std::endl;
+		std::cout << "Reboot device: PARPORT" << std::endl;
+		std::cout << "PARPORT device: " << parport_device_ << std::endl;
+		std::cout << "OFF time ms: " << off_time_ms_ << std::endl;
+		std::cout << "Pattern to find: " << find_pattern_ << std::endl;
 	}
 }
 
@@ -144,7 +174,23 @@ int Rebooter::reboot(void) {
 			std::cout << "Error turning URIEL on." << std::endl;
 			return -1;
 		}
+	} else if (reboot_device_ == PARPORT) {
 
+		std::cout << "Turning PARPORT off..." << std::endl;
+		if (parport_off(parport_device_.c_str()) < 0) {
+			std::cout << "Error turning PARPORT off." << std::endl;
+			return -1;
+		}
+		// wait off time
+		std::cout << "Wait " << off_time_ms_ << " ms." << std::endl;
+		std::this_thread::sleep_for (std::chrono::milliseconds(off_time_ms_));
+
+		std::cout << "Turning PARPORT on..." << std::endl;
+		// turn on again
+		if (parport_on(parport_device_.c_str()) < 0) {
+			std::cout << "Error turning URIEL on." << std::endl;
+			return -1;
+		}
 	}
 	return 0;
 }

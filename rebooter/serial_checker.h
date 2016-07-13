@@ -16,9 +16,9 @@ public:
 	int InitCheckPattern(void);
 private:
 	std::string serial_device_;
+	bool log_serial_;
 	std::string find_pattern_;
 	int result_;
-	bool log_serial_;
 };
 
 #endif // SERIAL_CHECKER_H
