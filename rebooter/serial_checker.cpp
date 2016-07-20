@@ -43,7 +43,7 @@ int SerialChecker::Config(void) {
 
 int SerialChecker::InitCheckPattern(void) {
 
-	char line_buf[256];
+	char line_buf[1024];
 
 	// open serial port for reading
 	std::cout << "Opening Serial Device for reading...";

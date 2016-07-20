@@ -106,6 +106,10 @@ int Rebooter::Start(void){
 		// Open serial and check pattern
 		// Stays here until pattern is found
 		serial_checker.InitCheckPattern();
+
+		// wait time to reboot again
+		std::cout << "Wait " << wait_ << " s to reboot again." << std::endl;
+		std::this_thread::sleep_for (std::chrono::seconds(wait_));
 	}
 
 	std::cout << std::endl;
