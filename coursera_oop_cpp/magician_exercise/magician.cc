@@ -27,6 +27,7 @@ void Magician::startMagic(Spectator& spectator) {
 
 void Magician::announceMagicResult(unsigned int assistantResult) const {
   unsigned int result = assistantResult + 115;
-  std::cout << "I see that you are " << result << " years old " << std::endl
-            << "and you have " << result << " in your pocket" << std::endl;
+  std::cout << "[Magician] "
+            << "I see that you are " << result << " years old "
+            << "and you have " << result << " in your pocket." << std::endl;
 }
