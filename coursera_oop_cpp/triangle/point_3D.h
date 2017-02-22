@@ -9,7 +9,8 @@
 #define POINT_3D_H_
 
 class Point3D {
-public:
+ public:
+  Point3D();
   Point3D(float x, float y, float z);
   void show() const;
   bool compare(const Point3D& point) const;
@@ -21,7 +22,7 @@ public:
   void setZ(float z);
   double distance(const Point3D& point) const;
 
-private:
+ private:
   float x_;
   float y_;
   float z_;

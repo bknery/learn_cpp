@@ -11,15 +11,15 @@
 #include "point_3D.h"
 
 class Triangle {
-public:
-	Triangle(Point3D p1, Point3D p2, Point3D p3);
-	double perimeter() const;
-	bool isIsosceles() const;
+ public:
+  Triangle(const Point3D& p1, const Point3D& p2, const Point3D& p3);
+  double perimeter() const;
+  bool isIsosceles() const;
 
-private:
-	Point3D p1_;
-	Point3D p2_;
-	Point3D p3_;
+ private:
+  Point3D p1_;
+  Point3D p2_;
+  Point3D p3_;
 };
 
 #endif /* TRIANGLE_H_ */

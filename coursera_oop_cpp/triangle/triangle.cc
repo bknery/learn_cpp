@@ -8,10 +8,10 @@
 #include "triangle.h"
 #include <cmath>
 
-Triangle::Triangle(Point3D p1, Point3D p2, Point3D p3) {
-	p1_ = p1;
-	p2_ = p2;
-	p3_ = p3;
+Triangle::Triangle(const Point3D& p1, const Point3D& p2, const Point3D& p3) {
+  p1_ = p1;
+  p2_ = p2;
+  p3_ = p3;
 }
 
 double Triangle::perimeter() const {
@@ -24,10 +24,8 @@ bool Triangle::isIsosceles() const {
   double side3 = p3_.distance(p1_);
 
   if ((side1 == side2) || (side1 == side3) || (side2 == side3)) {
-	  return true;
+    return true;
   } else {
-	  return false;
+    return false;
   }
 }
-
-
