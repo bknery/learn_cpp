@@ -32,3 +32,8 @@ build/
 
 # VIM swap files
 *.swp
+
+#Eclipse
+.cproject
+.project
+.settings/
