@@ -27,7 +27,7 @@ public:
 		cout << "Fin d'une souris..." << endl;
 	}
 
-	void afficher(){
+	void afficher() const {
 		cout << "Une souris " << couleur;
 		if (clonee){
 			cout << ", clonee,";
@@ -46,7 +46,8 @@ public:
 	}
 
 	void evolue() {
-		age = esperance_vie;
+		while (age < esperance_vie)
+			vieillir();
 	}
 
 

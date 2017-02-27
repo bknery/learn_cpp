@@ -90,11 +90,11 @@ Exemplaire::Exemplaire(const Exemplaire& exemplaire) : oeuvre_(exemplaire.oeuvre
 }
 
 Exemplaire::~Exemplaire() {
-	cout << "Un exemplaire de : "
+	cout << "Un exemplaire de \""
 			<< oeuvre_.getTitre()
 			<< ", "
 			<< oeuvre_.getAuteur().getNom() << ", en "
-			<< oeuvre_.getLangue() << ", a été jeté !"
+			<< oeuvre_.getLangue() << "\" a été jeté !"
 			<< endl;
 }
 
@@ -105,6 +105,79 @@ void Exemplaire::affiche() const {
 		<< oeuvre_.getAuteur().getNom() << ", en "
 		<< oeuvre_.getLangue()
 		<< endl;
+}
+
+class Bibliotheque {
+public:
+	Bibliotheque(string nom);
+	~Bibliotheque();
+	string getNom() const {return nom_;}
+	void stocker(const Oeuvre& oeuvre, unsigned int n = 1);
+	void lister_exemplaires() const;
+	void lister_exemplaires(string langue) const;
+	unsigned int compter_exemplaires(const Oeuvre& oeuvre) const;
+	void afficher_auteurs(bool prime = false) const;
+private:
+	string nom_;
+	vector<Exemplaire*> exemplaires_;
+};
+
+Bibliotheque::Bibliotheque(string nom) : nom_(nom) {
+	cout << "La bibliothèque " << nom_ << " est ouverte !" << endl;
+}
+
+void Bibliotheque::stocker(const Oeuvre& oeuvre, unsigned int n) {
+	for(int i =  0; i < n; i++) {
+		exemplaires_.push_back(new Exemplaire(oeuvre));
+	}
+}
+
+void Bibliotheque::lister_exemplaires() const {
+	for (vector<Exemplaire*>::const_iterator it = exemplaires_.begin() ; it != exemplaires_.end(); ++it)
+		(*it)->affiche();
+}
+
+void Bibliotheque::lister_exemplaires(string langue) const {
+	for (vector<Exemplaire*>::const_iterator it = exemplaires_.begin() ; it != exemplaires_.end(); ++it) {
+		if (langue == (*it)->getOeuvre().getLangue())
+			(*it)->affiche();
+	}
+}
+
+unsigned int Bibliotheque::compter_exemplaires(const Oeuvre& oeuvre) const {
+	unsigned int counter = 0;
+	for (vector<Exemplaire*>::const_iterator it = exemplaires_.begin() ; it != exemplaires_.end(); ++it) {
+		// Check if title and author are the same
+		if ((oeuvre.getTitre() == (*it)->getOeuvre().getTitre()) &&
+			(oeuvre.getAuteur().getNom() == (*it)->getOeuvre().getAuteur().getNom())) {
+			counter++;
+		}
+	}
+	return counter;
+}
+
+void Bibliotheque::afficher_auteurs(bool prime) const {
+	for (vector<Exemplaire*>::const_iterator it = exemplaires_.begin() ; it != exemplaires_.end(); ++it) {
+		if (prime == false){
+			cout << (*it)->getOeuvre().getAuteur().getNom();
+			cout << endl;
+		} else {
+			// print only if it has a prize
+			if ((*it)->getOeuvre().getAuteur().getPrix()) {
+				cout << (*it)->getOeuvre().getAuteur().getNom();
+				cout << endl;
+			}
+		}
+	}
+}
+
+Bibliotheque::~Bibliotheque() {
+	cout << "La bibliothèque " << nom_ << " ferme ses portes," << endl;
+	cout << "et détruit ses exemplaires :" << endl;
+
+	for (vector<Exemplaire*>::const_iterator it = exemplaires_.begin() ; it != exemplaires_.end(); ++it) {
+		delete (*it);
+	}
 }
 
 /*******************************************
