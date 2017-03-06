@@ -15,7 +15,7 @@ public:
     Compléter le code à partir d'ici
   *******************************************************/
   Flacon(string nom, double volume, double pH);
-  ostream& etiquete(ostream& sortie) const;
+  ostream& etiquette(ostream& sortie) const;
   const Flacon operator+(const Flacon& flacon) const;
   string getNom() const {return nom;}
   double getVolume() const {return volume;}
@@ -26,13 +26,13 @@ public:
 Flacon::Flacon(string nom, double volume, double pH)
   : nom(nom), volume(volume), pH(pH) {}
 
-ostream& Flacon::etiquete(ostream& sortie) const {
+ostream& Flacon::etiquette(ostream& sortie) const {
   sortie << nom << " : " << volume << " ml, pH " << pH;
   return sortie;
 }
 
 ostream& operator<<(ostream& sortie, const Flacon& flacon) {
-	return flacon.etiquete(sortie);
+	return flacon.etiquette(sortie);
 }
 
 const Flacon Flacon::operator+(const Flacon& flacon) const {

@@ -59,17 +59,19 @@ Construction::Construction(Brique brique)
 }
 
 ostream& Construction::afficher(ostream& sortie) const {
-  int height(getHeight());
-  int deep(getDeep());
-  int width(getWidth());
+  if (!contenu.empty()) {
+    int height(getHeight());
 
-  for (int i = (height -1); i >= 0; --i) {
-    sortie << "Couche " << i << " :" << endl;
-    for (int j = 0; j < deep; ++j) {
-      for (int k = 0; k < width; ++k) {
-        sortie << contenu[i][j][k] << " ";
+    int x(height -1);
+    for (vector<vector<vector<Brique>>>::const_reverse_iterator i = contenu.rbegin(); i != contenu.rend(); ++i) {
+      sortie << "Couche " << x << " :" << endl;
+      for (vector<vector<Brique>>::const_iterator j = i->begin(); j != i->end(); ++j) {
+        for (vector<Brique>::const_iterator k = j->begin(); k != j->end(); ++k) {
+          sortie << *k << " ";
+        }
+        sortie << endl;
       }
-      sortie << endl;
+      --x;
     }
   }
   return sortie;
@@ -96,7 +98,7 @@ void Construction::operator+=(const Construction& b) {
     if (!(b.getDeep() < getDeep())) {
       for (int i = 0; i < getHeight(); ++i) {
         for (int j = 0; j < getDeep(); ++j) {
-	  contenu[i][j].insert(contenu[i][j].end(), b.contenu[i][j].begin(), b.contenu[i][j].end());
+          contenu[i][j].insert(contenu[i][j].end(), b.contenu[i][j].begin(), b.contenu[i][j].end());
         }
       }
     }
@@ -121,28 +123,28 @@ const Construction operator+(Construction a, const Construction& b) {
 const Construction operator*(unsigned int n, Construction const& a)
 {
   Construction b(a);
-  for (int i = 0; i < n; ++i){
-    a += b;
+  for (unsigned int i = 1; i < n; ++i){
+    b += a;
   }
-  return a;
+  return b;
 }
 
 const Construction operator/(unsigned int n, Construction const& a)
 {
   Construction b(a);
-  for (int i = 0; i < n; ++i){
-    a ^= b;
+  for (unsigned int i = 1; i < n; ++i){
+    b ^= a;
   }
-  return a;
+  return b;
 }
 
 const Construction operator%(unsigned int n, Construction const& a)
 {
   Construction b(a);
-  for (int i = 0; i < n; ++i){
-    a -= b;
+  for (unsigned int i = 1; i < n; ++i){
+    b -= a;
   }
-  return a;
+  return b;
 }
 
 /*******************************************
