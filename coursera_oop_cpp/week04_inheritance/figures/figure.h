@@ -12,13 +12,15 @@
 
 class Figure {
 public:
-  Figure();
-  Figure(std::string color);
-  std::string getColor() const;
-  void setColor(std::string color);
+  Figure(double x = 0, double y = 0);
+  double getX() const;
+  double getY() const;
+  void setX(double x);
+  void setY(double y);
 
 protected:
-  std::string color_;
+  double x_;
+  double y_;
 };
 
 #endif /* FIGURE_H_ */

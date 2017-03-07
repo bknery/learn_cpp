@@ -8,9 +8,11 @@
 #ifndef RECTANGLE_H_
 #define RECTANGLE_H_
 
+#include "figure.h"
+
 class Rectangle : public Figure {
 public:
-  Rectangle(double width = 1, double height = 1);
+  Rectangle(double x = 0, double y = 0, double width = 2, double height = 1);
   double area() const;
   double getWidth() const;
   double getHeight() const;

@@ -8,15 +8,20 @@
 #include "figure.h"
 #include <string>
 
-Figure::Figure() : color_("white") {}
+Figure::Figure(double x, double y) : x_(x), y_(y) {}
 
-Figure::Figure(std::string color) : color_(color) {}
-
-std::string Figure::getColor() const {
-  return color_;
+double Figure::getX() const {
+  return x_;
 }
 
-void Figure::setColor(std::string color) {
-  color_ = color;
+double Figure::getY() const {
+  return y_;
 }
 
+void Figure::setX(double x) {
+  x_ = x;
+}
+
+void Figure::setY(double y) {
+  y_ = y;
+}

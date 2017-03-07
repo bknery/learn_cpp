@@ -8,7 +8,7 @@
 #include "circle.h"
 #include <cmath>
 
-Circle::Circle(double r) : r_(r) {}
+Circle::Circle(double x, double y, double r) : Figure(x, y), r_(r) {}
 
 double Circle::area() const {
   return M_PI * r_ * r_;

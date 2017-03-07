@@ -7,8 +7,8 @@
 
 #include "rectangle.h"
 
-Rectangle::Rectangle(double width, double height)
-  : width_(width), height_(height) {}
+Rectangle::Rectangle(double x, double y, double width, double height)
+  : Figure(x, y), width_(width), height_(height) {}
 
 double Rectangle::area() const {
   return width_ * height_;

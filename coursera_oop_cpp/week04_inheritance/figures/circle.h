@@ -8,9 +8,11 @@
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
+#include "figure.h"
+
 class Circle : public Figure {
 public:
-  Circle(double r = 1);
+  Circle(double x = 0, double y = 0, double r = 1);
   double area() const;
   double getR() const;
   void setR(double r);
