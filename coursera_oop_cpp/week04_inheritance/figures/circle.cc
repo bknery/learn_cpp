@@ -7,6 +7,7 @@
 
 #include "circle.h"
 #include <cmath>
+#include <iostream>
 
 Circle::Circle(double x, double y, double r) : Figure(x, y), r_(r) {}
 
@@ -24,4 +25,10 @@ void Circle::setR(double r) {
   } else {
     r_ = r;
   }
+}
+
+void Circle::draw() const {
+  std::cout << "Circle: " << std::endl;
+  std::cout << "  "; drawCenter();
+  std::cout << "  radius: " << r_ << ", area: " << area() << std::endl;
 }

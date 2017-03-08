@@ -17,6 +17,7 @@ public:
   double getY() const;
   void setX(double x);
   void setY(double y);
+  void drawCenter() const;
 
 protected:
   double x_;

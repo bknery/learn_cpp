@@ -5,6 +5,7 @@
  *      Author: bknery
  */
 
+#include <iostream>
 #include "rectangle.h"
 
 Rectangle::Rectangle(double x, double y, double width, double height)
@@ -36,4 +37,10 @@ void Rectangle::setHeight(double height) {
   } else {
     height_ = height;
   }
+}
+
+void Rectangle::draw() const {
+  std::cout << "Rectangle: " << std::endl;
+  std::cout << "  "; drawCenter();
+  std::cout << "  width: " << width_ << ", height: " << height_ << std::endl;
 }

@@ -16,6 +16,7 @@ public:
   double area() const;
   double getR() const;
   void setR(double r);
+  void draw() const;
 
 private:
   double r_;

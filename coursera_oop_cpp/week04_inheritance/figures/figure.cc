@@ -5,8 +5,9 @@
  *      Author: bknery
  */
 
-#include "figure.h"
+#include <iostream>
 #include <string>
+#include "figure.h"
 
 Figure::Figure(double x, double y) : x_(x), y_(y) {}
 
@@ -24,4 +25,8 @@ void Figure::setX(double x) {
 
 void Figure::setY(double y) {
   y_ = y;
+}
+
+void Figure::drawCenter() const {
+  std::cout << "center: (" << x_ << ", " << y_ << ")" << std::endl;
 }

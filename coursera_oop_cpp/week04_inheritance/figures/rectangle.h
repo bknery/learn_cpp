@@ -18,8 +18,9 @@ public:
   double getHeight() const;
   void setWidth(double width);
   void setHeight(double height);
+  void draw() const;
 
-private:
+protected:
   double width_;
   double height_;
 };
