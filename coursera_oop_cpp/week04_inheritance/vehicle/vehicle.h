@@ -15,7 +15,7 @@ class Vehicle {
 public:
   Vehicle();
   Vehicle(std::string brand, unsigned int purchaseYear, float purchasePrice);
-  void show(ostream& out) const;
+  void show(std::ostream& out) const;
   void calculatePrice();
 
 protected:
