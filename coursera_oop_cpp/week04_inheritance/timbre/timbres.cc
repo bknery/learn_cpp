@@ -23,6 +23,22 @@ protected:
   double valeur_faciale;
 };
 
+Timbre::Timbre(string nom, unsigned int anne, string pays, double valeur_faciale = 1.0) :
+  nom(nom), anne(anne), pays(pays), 
+  valeur_faciale(valeur_faciale) {}
+  
+double Timbre::vente() const {
+  
+}
+
+unsigned int Timbre::age() const {
+
+}
+
+ostream& Timbre::afficher(ostream& out) const {
+
+}
+
 class Rare : public Timbre {
 public:
   Rare(string nom, unsigned int anne, string pays,
