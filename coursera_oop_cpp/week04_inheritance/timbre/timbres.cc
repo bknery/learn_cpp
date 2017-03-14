@@ -28,11 +28,15 @@ Timbre::Timbre(string nom, unsigned int anne, string pays, double valeur_faciale
   valeur_faciale(valeur_faciale) {}
   
 double Timbre::vente() const {
-  
+  if (age() < 5) {
+    return valeur_faciale;
+  } else {
+    return valeur_faciale * (2.5 * age());
+  }
 }
 
 unsigned int Timbre::age() const {
-
+  return ANNEE_COURANTE - anne;
 }
 
 ostream& Timbre::afficher(ostream& out) const {
@@ -49,7 +53,31 @@ public:
 
 private:
   unsigned int exemplaires;
+  static constexpr unsigned int PRIX_BASE_TRES_RARE = 600;
+  static constexpr unsigned int PRIX_BASE_RARE = 400;
+  static constexpr unsigned int PRIX_BASE_PEU_RARE = 50;
 };
+
+Rare::Rare(string nom, unsigned int anne, string pays,
+           string valeur_faciale, unsigned int exemplaires) :
+               Timbre(nom, anne, pays, valeur_faciale),
+               exemplaires(exemplaires) {}
+
+double Rare::vente() const {
+  unsigned int prix_base = 0;
+  if (exemplaires < 100) {
+    prix_base = PRIX_BASE_TRES_RARE;
+  } else if ((exemplaires >= 100) && (exemplaires < 1000)) {
+    prix_base = PRIX_BASE_RARE;
+  } else {
+    prix_base = PRIX_BASE_PEU_RARE;
+  }
+  return prix_base * (age() / 10.0);
+}
+
+ostream& Rare::afficher(ostream& out) const {
+
+}
 
 class Commemoratif : public Timbre {
 public:
