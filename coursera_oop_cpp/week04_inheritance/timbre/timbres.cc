@@ -23,7 +23,7 @@ protected:
   double valeur_faciale;
 };
 
-Timbre::Timbre(string nom, unsigned int anne, string pays, double valeur_faciale = 1.0) :
+Timbre::Timbre(string nom, unsigned int anne, string pays, double valeur_faciale) :
   nom(nom), anne(anne), pays(pays), 
   valeur_faciale(valeur_faciale) {}
   
@@ -40,13 +40,20 @@ unsigned int Timbre::age() const {
 }
 
 ostream& Timbre::afficher(ostream& out) const {
+  out << "de nom " << nom << " datant de " << anne << " (provenance " << pays
+      << ") ayant pour valeur faciale " << valeur_faciale << " francs";
+  return out;
+}
 
+ostream& operator<<(ostream& out, const Timbre& timbre) {
+  out << "Timbre ";
+  return timbre.afficher(out);
 }
 
 class Rare : public Timbre {
 public:
   Rare(string nom, unsigned int anne, string pays,
-       string valeur_faciale, unsigned int exemplaires = 100);
+       double valeur_faciale, unsigned int exemplaires = 100);
   double vente() const;
   ostream& afficher(ostream& out) const;
   unsigned int nb_exemplaires() const {return exemplaires;}
@@ -59,7 +66,7 @@ private:
 };
 
 Rare::Rare(string nom, unsigned int anne, string pays,
-           string valeur_faciale, unsigned int exemplaires) :
+           double valeur_faciale, unsigned int exemplaires) :
                Timbre(nom, anne, pays, valeur_faciale),
                exemplaires(exemplaires) {}
 
@@ -76,15 +83,36 @@ double Rare::vente() const {
 }
 
 ostream& Rare::afficher(ostream& out) const {
+  out << "Timbre rare (" << exemplaires << " ex.) ";
+  return Timbre::afficher(out);
+}
 
+ostream& operator<<(ostream& out, const Rare& timbre) {
+  return timbre.afficher(out);
 }
 
 class Commemoratif : public Timbre {
 public:
-  Commemoratif(string nom, unsigned int anne, string pays, string valeur_faciale);
+  Commemoratif(string nom, unsigned int anne, string pays, double valeur_faciale);
   double vente() const;
   ostream& afficher(ostream& out) const;
 };
+
+Commemoratif::Commemoratif(string nom, unsigned int anne, string pays, double valeur_faciale) :
+    Timbre(nom, anne, pays, valeur_faciale) {}
+
+double Commemoratif::vente() const {
+  return 2 * Timbre::vente();
+}
+
+ostream& Commemoratif::afficher(ostream& out) const {
+  out << "Timbre commémoratif ";
+  return Timbre::afficher(out);
+}
+
+ostream& operator<<(ostream& out, const Commemoratif& timbre) {
+  return timbre.afficher(out);
+}
 
 /*******************************************
  * Ne rien modifier après cette ligne.
