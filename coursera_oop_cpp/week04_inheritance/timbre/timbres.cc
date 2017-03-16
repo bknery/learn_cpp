@@ -11,20 +11,20 @@ private:
    * Compléter le code à partir d'ici
    *****************************************************/
 public:
-  Timbre(string nom, unsigned int anne, string pays = "Suisse", double valeur_faciale = 1.0);
+  Timbre(const string nom, unsigned int annee, string pays = "Suisse", double valeur_faciale = 1.0);
   double vente() const;
   unsigned int age() const;
   ostream& afficher(ostream& out) const;
 
 protected:
-  string nom;
-  unsigned int anne;
+  const string nom;
+  unsigned int annee;
   string pays;
   double valeur_faciale;
 };
 
-Timbre::Timbre(string nom, unsigned int anne, string pays, double valeur_faciale) :
-  nom(nom), anne(anne), pays(pays), 
+Timbre::Timbre(const string nom, unsigned int annee, string pays, double valeur_faciale) :
+  nom(nom), annee(annee), pays(pays),
   valeur_faciale(valeur_faciale) {}
   
 double Timbre::vente() const {
@@ -36,11 +36,11 @@ double Timbre::vente() const {
 }
 
 unsigned int Timbre::age() const {
-  return ANNEE_COURANTE - anne;
+  return ANNEE_COURANTE - annee;
 }
 
 ostream& Timbre::afficher(ostream& out) const {
-  out << "de nom " << nom << " datant de " << anne << " (provenance " << pays
+  out << "de nom " << nom << " datant de " << annee << " (provenance " << pays
       << ") ayant pour valeur faciale " << valeur_faciale << " francs";
   return out;
 }
@@ -52,8 +52,8 @@ ostream& operator<<(ostream& out, const Timbre& timbre) {
 
 class Rare : public Timbre {
 public:
-  Rare(string nom, unsigned int anne, string pays,
-       double valeur_faciale, unsigned int exemplaires = 100);
+  Rare(const string nom, unsigned int annee, string pays = "Suisse",
+       double valeur_faciale = 1.0, unsigned int exemplaires = 100);
   double vente() const;
   ostream& afficher(ostream& out) const;
   unsigned int nb_exemplaires() const {return exemplaires;}
@@ -65,9 +65,9 @@ private:
   static constexpr unsigned int PRIX_BASE_PEU_RARE = 50;
 };
 
-Rare::Rare(string nom, unsigned int anne, string pays,
+Rare::Rare(const string nom, unsigned int annee, string pays,
            double valeur_faciale, unsigned int exemplaires) :
-               Timbre(nom, anne, pays, valeur_faciale),
+               Timbre(nom, annee, pays, valeur_faciale),
                exemplaires(exemplaires) {}
 
 double Rare::vente() const {
@@ -93,13 +93,13 @@ ostream& operator<<(ostream& out, const Rare& timbre) {
 
 class Commemoratif : public Timbre {
 public:
-  Commemoratif(string nom, unsigned int anne, string pays, double valeur_faciale);
+  Commemoratif(const string nom, unsigned int annee, string pays = "Suisse", double valeur_faciale = 1.0);
   double vente() const;
   ostream& afficher(ostream& out) const;
 };
 
-Commemoratif::Commemoratif(string nom, unsigned int anne, string pays, double valeur_faciale) :
-    Timbre(nom, anne, pays, valeur_faciale) {}
+Commemoratif::Commemoratif(const string nom, unsigned int annee, string pays, double valeur_faciale) :
+    Timbre(nom, annee, pays, valeur_faciale) {}
 
 double Commemoratif::vente() const {
   return 2 * Timbre::vente();
