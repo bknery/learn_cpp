@@ -9,12 +9,13 @@
 #define BOOK_H_
 
 #include <string>
+#include <iostream>
 
 class Book {
 public:
   Book(std::string title, std::string author, unsigned int pages, bool bestSeller);
   virtual double calculatePrice() const;
-  virtual void show() const;
+  virtual void show(std::ostream& out) const;
   virtual ~Book();
 
 protected:
