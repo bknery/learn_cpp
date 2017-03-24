@@ -12,9 +12,10 @@ class Produit {
 public:
   Produit(string nom, string unite = "") :
     nom_(nom), unite_(unite) {}
-  string getNom() const {return nom_;}
-  string getUnite() const {return unite_;}
-  string toString() const {return nom_;}
+  virtual string getNom() const {return nom_;}
+  virtual string getUnite() const {return unite_;}
+  virtual string toString() const {return nom_;}
+  virtual ~Produit() {}
 
 protected:
   string nom_;
@@ -27,9 +28,36 @@ public:
     produit_(produit), quantite_(quantite) {}
   const Produit& getProduit() const {return produit_;}
   double getQuantite() const {return quantite_;}
+
 protected:
-  const Produit& produit_;
+  const Produit produit_;
   double quantite_;
+};
+
+class Recette {
+public:
+  Recette(string nom, double nbFois = 1.0) :
+    nom_(nom), nbFois_(nbFois) {}
+  void ajouter(const Produit& p, double quantite);
+  Recette adapter(double n);
+  string toString();
+  ~Recette();
+
+protected:
+  string nom_;
+  double nbFois_;
+  vector<Ingredient*> ingredients_;
+};
+
+void Recette::ajouter(const Produit& p, double quantite) {
+  ingredients_.push_back(new Ingredient(p, quantite));
+}
+
+class ProduitCuisine : public Produit {
+public:
+  ProduitCuisine(string nom) : Produit(nom, "portion(s)"), recette_(nom) {}
+private:
+  Recette recette_;
 };
 
 /*******************************************
