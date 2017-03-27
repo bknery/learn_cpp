@@ -32,8 +32,54 @@ class Navire
   /*****************************************************
    * Compléter le code à partir d'ici
    *****************************************************/
+public:
+  Navire(int x, int y, Pavillon pavillon) : position_(x, y), pavillon_(pavillon), etat_(Intact) {}
+  const Coordonnees& position() const;
+  void avancer(int de_x, int de_y);
+  void renflouer();
+  virtual ostream& afficher(ostream& out) const;
+  virtual void attaque(Navire& autre) = 0;
+  virtual void replique(Navire& autre) = 0;
+  virtual void est_touche() = 0;
+  virtual void rencontrer(Navire& autre) = 0;
+  virtual ~Navire() {}
 
+protected:
+  Coordonnees position_;
+  Pavillon pavillon_;
+  Etat etat_;
+  static constexpr unsigned int rayon_rencontre = 10;
 };
+
+const Coordonnees& Navire::position() const {
+  return position_;
+}
+
+void Navire::avancer(int de_x, int de_y) {
+
+  if (etat_ != Coule) {
+    Coordonnees c(de_x, de_y);
+    position_ += c;
+  }
+}
+
+void Navire::renflouer() {
+  etat_ = Intact;
+}
+
+ostream& Navire::afficher(ostream& out) const {
+  out << " en " << position_ << " battant pavillon " << pavillon_ << ", " << etat_;
+  return out;
+}
+
+ostream& operator<<(ostream& out, const Navire& navire) {
+  navire.afficher(out);
+  return out;
+}
+
+double distance(const Navire& n1, const Navire& n2) {
+  return distance(n1.position(), n2.position());
+}
 
 void Coordonnees::operator+=(Coordonnees const& autre)
 {
@@ -41,7 +87,7 @@ void Coordonnees::operator+=(Coordonnees const& autre)
   y_ += autre.y_;
 }
 
-double distance(Coordonnees c1, Coordonnees c2) {
+double distance(const Coordonnees& c1, const Coordonnees& c2) {
   return sqrt(sq(c1.x() - c2.x()) + sq(c1.y() - c2.y()));
 }
 
@@ -83,6 +129,34 @@ ostream& operator<<(ostream& out, const Etat& e) {
   }
   return out;
 }
+
+class Pirate : public virtual Navire {
+public:
+  Pirate(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
+  virtual void attaque(Navire& autre) override;
+  virtual void replique(Navire& autre) override;
+  virtual void est_touche() override;
+  virtual void rencontrer(Navire& autre) override;
+
+};
+
+class Marchand : public virtual Navire {
+public:
+  Marchand(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
+  virtual void attaque(Navire& autre) override;
+  virtual void replique(Navire& autre) override;
+  virtual void est_touche() override;
+  virtual void rencontrer(Navire& autre) override;
+};
+
+class Felon : public Pirate, public Marchand {
+public:
+  Felon(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
+  virtual void attaque(Navire& autre) override;
+  virtual void replique(Navire& autre) override;
+  virtual void est_touche() override;
+  virtual void rencontrer(Navire& autre) override;
+};
 
 /*******************************************
  * Ne rien modifier après cette ligne.
