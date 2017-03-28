@@ -41,7 +41,7 @@ public:
   virtual void attaque(Navire& autre) = 0;
   virtual void replique(Navire& autre) = 0;
   virtual void est_touche() = 0;
-  virtual void rencontrer(Navire& autre) = 0;
+  virtual void rencontrer(Navire& autre);
   virtual ~Navire() {}
 
 protected:
@@ -51,44 +51,12 @@ protected:
   static constexpr unsigned int rayon_rencontre = 10;
 };
 
-const Coordonnees& Navire::position() const {
-  return position_;
-}
-
-void Navire::avancer(int de_x, int de_y) {
-
-  if (etat_ != Coule) {
-    Coordonnees c(de_x, de_y);
-    position_ += c;
-  }
-}
-
-void Navire::renflouer() {
-  etat_ = Intact;
-}
-
-ostream& Navire::afficher(ostream& out) const {
-  out << " en " << position_ << " battant pavillon " << pavillon_ << ", " << etat_;
-  return out;
-}
-
-ostream& operator<<(ostream& out, const Navire& navire) {
-  navire.afficher(out);
-  return out;
+double distance(const Coordonnees& c1, const Coordonnees& c2) {
+  return sqrt(sq(c1.x() - c2.x()) + sq(c1.y() - c2.y()));
 }
 
 double distance(const Navire& n1, const Navire& n2) {
   return distance(n1.position(), n2.position());
-}
-
-void Coordonnees::operator+=(Coordonnees const& autre)
-{
-  x_ += autre.x_;
-  y_ += autre.y_;
-}
-
-double distance(const Coordonnees& c1, const Coordonnees& c2) {
-  return sqrt(sq(c1.x() - c2.x()) + sq(c1.y() - c2.y()));
 }
 
 ostream& operator<<(ostream& out, const Coordonnees& c) {
@@ -130,32 +98,114 @@ ostream& operator<<(ostream& out, const Etat& e) {
   return out;
 }
 
+const Coordonnees& Navire::position() const {
+  return position_;
+}
+
+void Navire::avancer(int de_x, int de_y) {
+
+  if (etat_ != Coule) {
+    Coordonnees c(de_x, de_y);
+    position_ += c;
+  }
+}
+
+void Navire::renflouer() {
+  etat_ = Intact;
+}
+
+ostream& Navire::afficher(ostream& out) const {
+  out << " en " << position_ << " battant pavillon " << pavillon_ << ", " << etat_;
+  return out;
+}
+
+void Navire::rencontrer(Navire& autre) {
+  if ((etat_ != Coule) && (autre.etat_ != Coule) &&
+      (pavillon_ != autre.pavillon_) && (distance(*this, autre) < rayon_rencontre)) {
+    attaque(autre);
+    replique(autre);
+  }
+}
+
+ostream& operator<<(ostream& out, const Navire& navire) {
+  return navire.afficher(out);
+}
+
+void Coordonnees::operator+=(Coordonnees const& autre)
+{
+  x_ += autre.x_;
+  y_ += autre.y_;
+}
+
 class Pirate : public virtual Navire {
 public:
   Pirate(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
-  virtual void attaque(Navire& autre) override;
-  virtual void replique(Navire& autre) override;
-  virtual void est_touche() override;
-  virtual void rencontrer(Navire& autre) override;
-
+  virtual void attaque(Navire& autre);
+  virtual void replique(Navire& autre);
+  virtual void est_touche();
+  virtual ~Pirate() {}
 };
+
+void Pirate::attaque(Navire& autre) {
+  cout << "A l'abordage !" << endl;
+  autre.est_touche();
+}
+
+void Pirate::replique(Navire& autre) {
+  if (etat_ != Coule) {
+    cout << "Non mais, ils nous attaquent ! On riposte !!" << endl;
+    attaque(autre);
+  }
+}
+
+void Pirate::est_touche() {
+  switch (etat_) {
+    case Intact:
+      etat_ = Endommage;
+      break;
+    case Endommage:
+      etat_ = Coule;
+      break;
+    default:
+      break;
+  }
+}
 
 class Marchand : public virtual Navire {
 public:
   Marchand(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
-  virtual void attaque(Navire& autre) override;
-  virtual void replique(Navire& autre) override;
-  virtual void est_touche() override;
-  virtual void rencontrer(Navire& autre) override;
+  virtual void attaque(Navire& autre);
+  virtual void replique(Navire& autre);
+  virtual void est_touche();
+  virtual ~Marchand() {}
 };
+
+void Marchand::attaque(Navire& autre) {
+  cout << "On vous aura ! (insultes) " << endl;
+}
+
+void Marchand::replique(Navire& autre) {
+  if (etat_ == Coule) {
+    cout << "SOS je coule !" << endl;
+  } else {
+    cout << "Même pas peur !" << endl;
+  }
+}
+
+void Marchand::est_touche() {
+  etat_ = Coule;
+}
 
 class Felon : public Pirate, public Marchand {
 public:
-  Felon(int x, int y, Pavillon pavillon) : Navire(x, y, pavillon) {}
-  virtual void attaque(Navire& autre) override;
-  virtual void replique(Navire& autre) override;
-  virtual void est_touche() override;
-  virtual void rencontrer(Navire& autre) override;
+  Felon(int x, int y, Pavillon pavillon) :
+    Navire(x, y, pavillon),
+    Pirate(x, y, pavillon),
+    Marchand(x, y, pavillon) {}
+  using Pirate::attaque;
+  using Marchand::replique;
+  using Pirate::est_touche;
+  virtual ~Felon() {}
 };
 
 /*******************************************
