@@ -11,7 +11,9 @@
 #include "accessory.h"
 
 class Strap : public Accessory {
-
+public:
+  Strap(const std::string& name, double base_price);
+  virtual ~Strap() {}
 };
 
 #endif /* STRAP_H_ */

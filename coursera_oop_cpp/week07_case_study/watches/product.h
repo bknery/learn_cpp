@@ -10,13 +10,10 @@
 
 class Product {
 public:
-  Product(const std::string& name = "Unnamed", double value = 0);
+  Product(double value = 0);
   virtual double price() const;
   virtual void show(std::ostream& out) const;
   virtual ~Product() = 0;
-
-protected:
-  const std::string name_;
 
 private:
   const double value_;

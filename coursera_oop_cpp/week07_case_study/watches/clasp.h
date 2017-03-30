@@ -11,7 +11,9 @@
 #include "accessory.h"
 
 class Clasp : public Accessory {
-
+public:
+  Clasp(const std::string& name, double base_price);
+  virtual ~Clasp() {}
 };
 
 #endif /* CLASP_H_ */
