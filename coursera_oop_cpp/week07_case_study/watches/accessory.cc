@@ -5,6 +5,7 @@
  *      Author: bknery
  */
 
+#include <iostream>
 #include "accessory.h"
 
 Accessory::Accessory(const std::string& name, double base_price) :
@@ -13,6 +14,6 @@ Accessory::Accessory(const std::string& name, double base_price) :
 }
 
 void Accessory::show(std::ostream& out) const {
-  out << name_ << "costing: ";
+  out << name_ << " costing: ";
   Product::show(out);
 }

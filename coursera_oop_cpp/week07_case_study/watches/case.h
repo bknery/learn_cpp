@@ -11,7 +11,9 @@
 #include "accessory.h"
 
 class Case : public Accessory {
-
+public:
+  Case(const std::string& name, double base_price);
+  virtual ~Case() {}
 };
 
 #endif /* CASE_H_ */

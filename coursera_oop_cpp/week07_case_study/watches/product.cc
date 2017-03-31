@@ -8,9 +8,7 @@
 #include <iostream>
 #include "product.h"
 
-Product::Product(double value) : value_(value) {
-  std::cout << "new product" << std::endl;
-}
+Product::Product(double value) : value_(value) {}
 
 double Product::price() const {
   return value_;

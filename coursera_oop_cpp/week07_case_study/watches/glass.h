@@ -11,7 +11,9 @@
 #include "accessory.h"
 
 class Glass : public Accessory {
-
+public:
+  Glass(const std::string& name, double base_price);
+  virtual ~Glass() {}
 };
 
 #endif /* GLASS_H_ */
