@@ -9,9 +9,7 @@
 #include "accessory.h"
 
 Accessory::Accessory(const std::string& name, double base_price) :
-  Product(base_price), name_(name) {
-  std::cout << "new accessory: " << name << std::endl;
-}
+  Product(base_price), name_(name) {}
 
 void Accessory::show(std::ostream& out) const {
   out << name_ << " costing: ";

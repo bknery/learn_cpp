@@ -10,3 +10,12 @@
 DigitalMechanism::DigitalMechanism(double base_price, std::string time, std::string alarm) :
   Mechanism(base_price, time), alarm_(alarm) {}
 
+void DigitalMechanism::showType(std::ostream& out) const {
+  out << "digital";
+}
+
+void DigitalMechanism::showDisplay(std::ostream& out) const {
+  Mechanism::showDisplay(out);
+  out << ", alarm: " << alarm_;
+}
+

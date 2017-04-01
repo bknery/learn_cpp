@@ -16,14 +16,14 @@
 
 class Watch : public Product {
 public:
-  Watch(double base_price);
+  Watch(Mechanism* p_mechanism, double base_price);
   void add(Accessory* p_accessory);
   virtual double price() const override;
   virtual void show(std::ostream& out) const override;
   virtual ~Watch();
 
 private:
-  //std::unique_ptr<Mechanism> core_;
+  std::unique_ptr<Mechanism> core_;
   std::vector<std::unique_ptr<Accessory>> accessories_;
 };
 
